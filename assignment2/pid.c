@@ -19,7 +19,7 @@
 #define PROC_NAME "pid"
 
 /* the current pid */
-static long l_pid;
+long l_pid;
 
 /**
  * Function prototypes
@@ -77,13 +77,11 @@ static ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, 
 
         completed = 1;
 
-        rv = sprintf(buffer, "command = [%s] pid = [%d] state = [%d]", tsk->comm, tsk->pid, tsk->state);
+        rv = sprintf(buffer, "command = [%s] pid = [%d] state = [%d]\n", tsk->comm, tsk->pid, tsk->state);
 
 
         // copies the contents of kernel buffer to userspace usr_buf 
-        if (copy_to_user(usr_buf, buffer, rv)) {
-                rv = -1;
-        }
+        copy_to_user(usr_buf, buffer, rv);
 
         return rv;
 }
@@ -96,15 +94,13 @@ static ssize_t proc_write(struct file *file, const char __user *usr_buf, size_t 
         char *k_mem;
 
         // allocate kernel memory
-        k_mem = kmalloc(count, GFP_KERNEL);
+        k_mem = kmalloc(count+1, GFP_KERNEL);
 
         /* copies user space usr_buf to kernel buffer */
-        if (copy_from_user(k_mem, usr_buf, count)) {
-		printk(KERN_INFO "Error copying from user\n");
-                return -1;
-        }
+        copy_from_user(k_mem, usr_buf, count);
 
-	printk(KERN_INFO "%s∖n", k_mem);
+     	printk(KERN_INFO "%s∖n", k_mem);
+        k_mem[count] = '\0';
 
         int rv = kstrtol(k_mem, 10, &l_pid);
 
