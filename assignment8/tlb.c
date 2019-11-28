@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "tlb.h"
 
 
@@ -128,6 +129,7 @@ int table(int page, int mod, int *page_fault, int *tlb_hit, FILE *backing_store,
                 // enough space in memory, give a new frame for this page
                 frame = free_mem;
                 page_table[page] = free_mem++;
+                swap_frame_in_mem(backing_store, page, frame);
             }
             else {
                 // not enough space in memory
@@ -151,4 +153,8 @@ int table(int page, int mod, int *page_fault, int *tlb_hit, FILE *backing_store,
         (*tlb_hit)++;
     }
     return frame;
+}
+
+int get_content(int addr) {
+    return memory[addr];
 }
