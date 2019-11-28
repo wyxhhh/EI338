@@ -29,3 +29,6 @@ void update_TLB(int page, int frame, int mod, int time);
 
 // all in one: table function
 int table(int page, int mod, int *page_fault, int *tlb_hit, FILE *backing_store, int time);
+
+// get memory content
+int get_content(int addr);
