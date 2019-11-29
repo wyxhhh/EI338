@@ -65,6 +65,7 @@ int safe_state(){
                 // this customer has been served
                 flag = 1;
                 customer_vec[i] = 0;
+                customer_num -= 1;
                 // return resources
                 for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
                     aval[j] += allocation[i][j];
