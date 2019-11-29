@@ -1,6 +1,7 @@
 #include "banker.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 /* the available amount of each resource */
@@ -37,6 +38,43 @@ void auto_calc() {
     }
 }
 
+int can_consume(int need_vec[], int aval_vec[]) {
+    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
+        if (need_vec[i] > aval_vec[i])
+            return 0;
+    return 1;
+}
+
+int safe_state(){
+    int aval[NUMBER_OF_RESOURCES];
+    // copy available to aval
+    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
+        aval[i] = available[i];
+
+    int customer_num = NUMBER_OF_CUSTOMERS;
+    int customer_vec[NUMBER_OF_CUSTOMERS];  // if this customer has been served
+    // initialize customer vec
+    for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i)
+        customer_vec[i] = 1;
+
+    // traverse all customers
+    while (customer_num > 0) {
+        int flag = 0;   // flag: if any customer has been served in this iteration
+        for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
+            if (customer_vec[i] == 1 && can_consume(need[i], aval)) {
+                // this customer has been served
+                flag = 1;
+                customer_vec[i] = 0;
+                // return resources
+                for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
+                    aval[j] += allocation[i][j];
+            }
+        }
+        if (flag == 0)
+            return -1;
+    }
+    return 0;
+}
 
 int request_resources(int customer_num, int request[]) {
     for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
@@ -48,6 +86,8 @@ int request_resources(int customer_num, int request[]) {
         if (need[customer_num][i] < 0)
             return -2;                  // error, too much requested
     }
+    if (safe_state() < 0)
+    return -3;                  // unsafe sate
     return 0;
 }
 

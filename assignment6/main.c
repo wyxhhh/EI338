@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     auto_calc();
 
     char operand[3];
+    printf("> ");
     scanf("%s", operand);
     while (strcmp(operand, "*") != 0) {
         int alloc_tmp[NUMBER_OF_RESOURCES];
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
         else if (strcmp(operand, "RL") == 0)
             release_resources(customer_num, alloc_tmp);
         else
-            err = -3;
+            err = -4;
         
         switch (err)        // error case
         {
@@ -60,6 +61,10 @@ int main(int argc, char *argv[])
             return err;
         
         case -3:
+            printf("Unsafe state reached!");
+            return err;
+
+        case -4:
             printf("No such operand!");
             break;
         
@@ -67,6 +72,7 @@ int main(int argc, char *argv[])
             break;
         }
 
+        printf("> ");
         scanf("%s", operand);
     }
 
