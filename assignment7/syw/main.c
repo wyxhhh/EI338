@@ -8,7 +8,7 @@ int main(int argc, char **args) {
     char operator[5], name[10];
     char mod;
     int process_size;
-    
+
     mem_size = atoi(args[1]);
     init(mem_size);
 

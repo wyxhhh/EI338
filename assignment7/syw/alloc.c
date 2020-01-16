@@ -148,9 +148,13 @@ void compact_memory() {
                 tmp->next = next_tmp->next;
                 head_tmp->next = next_tmp;
                 next_tmp->next = tmp;
+                head_tmp = head_tmp->next;
             }
+            else
+                head_tmp = head_tmp->next;
         }
-        head_tmp = head_tmp->next;
+        else
+            head_tmp = head_tmp->next;
     }
 }
 
